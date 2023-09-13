@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "465848025400",
+    "project_id": "e-pu-7904e",
+    "storage_bucket": "e-pu-7904e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465848025400:android:329ac6bcd555a6c35f41cd",
+        "android_client_info": {
+          "package_name": "com.example.e_pu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhAJO5TcgZHqTwl1rEQep65u4ZejF8AlM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
