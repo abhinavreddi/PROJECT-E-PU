@@ -1,0 +1,46 @@
+Index: app/src/main/res/layout/fragment_support.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_support.xml b/app/src/main/res/layout/fragment_support.xml
+--- a/app/src/main/res/layout/fragment_support.xml	
++++ b/app/src/main/res/layout/fragment_support.xml	(date 1695311171047)
+@@ -8,31 +8,14 @@
+     android:gravity="center"
+     tools:context=".ProfileFragment">
+ 
+-
++    <!-- TODO: Update blank fragment layout -->
+     <TextView
+-        android:layout_width="430dp"
+-        android:layout_height="67dp"
+-        android:background="#673AB7"
+-        android:text="  SUPPORT"
+-        android:textColor="#FAF7F7"
+-        android:textSize="38sp"
+-        app:layout_constraintBottom_toTopOf="@+id/textView2"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintVertical_bias="0.0" />
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="support Fragment"
++        android:textSize="24sp"/>
+ 
+-    <TextView
+-        android:id="@+id/textView2"
+-        android:layout_width="390dp"
+-        android:layout_height="74dp"
+-        android:layout_marginBottom="308dp"
+-        android:text="EMAIL :-                                   abhinavnalasani@gmail.com "
+-        android:textSize="24sp"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent" />
+ 
+-</androidx.constraintlayout.widget.ConstraintLayout>
++</LinearLayout>
+ 
+ 
