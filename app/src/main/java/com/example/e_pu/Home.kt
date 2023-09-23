@@ -1,40 +1,47 @@
 package com.example.e_pu
 
-
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class Home : AppCompatActivity() {
 
-    private lateinit var  auth: FirebaseAuth
-    private lateinit var sharedPreferences: SharedPreferences
+    private val homeFragment = HomeFragment()
+    private val dashboardFragment = SupportFragment()
+    private val profileFragment = ProfileFragment()
+
+    private lateinit var activeFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home)
 
-        auth = FirebaseAuth.getInstance()
-        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
-//        val welcomeTextView = findViewById<TextView>(R.id.welcomeTextView)
-//        welcomeTextView.text = "welcome to my app"
+        supportFragmentManager.beginTransaction().apply {
+            add(R.id.fragment_container, homeFragment, "home").hide(homeFragment)// immediately hiding the profileFragment by calling the hide method on it. This means that when the fragments are initially added, the profileFragment will be hidden from view.
+            add(R.id.fragment_container, dashboardFragment, "support").hide(dashboardFragment)
+            add(R.id.fragment_container, profileFragment, "profile")
+        }.commit()
 
-        val logoutButton = findViewById<TextView>(R.id.LogoutButton)
-        logoutButton.setOnClickListener {
-            auth.signOut()
+        activeFragment = profileFragment
 
-            val editor = sharedPreferences.edit()
-            editor.putBoolean("isLoggedIn",false)
-            editor.apply()
+        navView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.navigation_profile -> showFragment(profileFragment)
+                R.id.navigation_home -> showFragment(homeFragment)
+                R.id.navigation_dashboard -> showFragment(dashboardFragment)
 
-            val intent = Intent(this, Login::class.java)
-            startActivity(intent)
-            finish()
-          }
+            }
+            true// you're returning true to indicate that the event has been successfully handled and no further action is needed.
+        }
     }
+
+    private fun showFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().hide(activeFragment).show(fragment)
+            .commit()  // responsible for managinging fragment visibility
+        activeFragment = fragment // make the activefragment as current fragment
+    }
+
 }

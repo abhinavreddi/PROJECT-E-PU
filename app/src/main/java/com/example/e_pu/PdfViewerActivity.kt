@@ -1,52 +1,71 @@
-import android.graphics.Bitmap
+package com.example.e_pu
+
+import android.content.Intent
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
 import android.os.ParcelFileDescriptor
-import android.widget.Button
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.e_pu.R  // Import your app's R class
+import androidx.viewpager.widget.ViewPager
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import android.widget.Button
+
 
 class PdfViewerActivity : AppCompatActivity() {
     private lateinit var pdfRenderer: PdfRenderer
-    private lateinit var pdfPage: PdfRenderer.Page
-    private lateinit var pdfImageView: ImageView
-    private lateinit var backButton: Button
+    private lateinit var viewPager: ViewPager
+    private lateinit var adapter: PdfPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pdf_viewer)
 
-        pdfImageView = findViewById(R.id.pdfviewer)
-        backButton = findViewById(R.id.exitButton)
+        viewPager = findViewById(R.id.viewPager)
+        val backButton = findViewById<Button>(R.id.backButton)
 
-       val pdfFileName = intent.getStringExtra("Unit.1.pdf")
-
+        val pdfFileName = intent.getStringExtra("pdfFileName")
 
         if (pdfFileName != null) {
-            displayPdf(pdfFileName)
+            try {
+                displayPdf(pdfFileName)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
 
         backButton.setOnClickListener {
-            finish() // Close the PDF viewer activity
+            // Navigate back to the home activity
+            val intent = Intent(this, Home::class.java)
+            startActivity(intent)
         }
     }
 
+    @Throws(IOException::class)
     private fun displayPdf(pdfFileName: String) {
-        val pdfFile = File(filesDir, pdfFileName)
-        val parcelFileDescriptor: ParcelFileDescriptor = ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY)
+        // Open the PDF using PdfRenderer
+        val assetManager = assets
+        val inputStream = assetManager.open(pdfFileName)
+        val file = File(cacheDir, "temp.pdf")
+        val outputStream = FileOutputStream(file)
+
+        val buffer = ByteArray(1024)
+        var bytesRead: Int
+
+        while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+            outputStream.write(buffer, 0, bytesRead)
+        }
+
+        outputStream.close()
+        inputStream.close()
+
+        val parcelFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
         pdfRenderer = PdfRenderer(parcelFileDescriptor)
-        pdfPage = pdfRenderer.openPage(0)
 
-        val bitmap: Bitmap = Bitmap.createBitmap(pdfPage.width, pdfPage.height, Bitmap.Config.ARGB_8888)
-        pdfPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-        pdfImageView.setImageBitmap(bitmap)
-    }
+        // Create an adapter for the ViewPager
+        adapter = PdfPagerAdapter(this, pdfRenderer)
 
-    override fun onDestroy() {
-        super.onDestroy()
-        pdfPage.close()
-        pdfRenderer.close()
+        // Set the adapter to the ViewPager
+        viewPager.adapter = adapter
     }
 }
